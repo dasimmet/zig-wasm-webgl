@@ -77,6 +77,11 @@ const glVertexAttribPointer = (attribLocation, size, type, normalize, stride, of
 }
 const glDrawArrays = (type, offset, count) => gl.drawArrays(type, offset, count);
 
+const consoleLog = (sourcePtr, sourceLen) => {
+  const source = readCharStr(sourcePtr, sourceLen);
+  console.log(source);
+}
+
 const env = {
   compileShader,
   linkShaderProgram,
@@ -93,14 +98,17 @@ const env = {
   glUseProgram,
   glEnableVertexAttribArray,
   glVertexAttribPointer,
-  glDrawArrays
+  glDrawArrays,
+  consoleLog
 };
 
-fetchAndInstantiate('main.wasm', {env}).then(function(instance) {
+fetchAndInstantiate('zig-out/lib/main.wasm', {env}).then(function(instance) {
   memory = instance.exports.memory;
   instance.exports.onInit();
 
   const onAnimationFrame = instance.exports.onAnimationFrame;
+
+  logArray = new Int32Array(memory.buffer, 0, 100);
 
   function step(timestamp) {
     onAnimationFrame(timestamp);
