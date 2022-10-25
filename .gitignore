@@ -4,4 +4,4 @@ todo/
 
 # Zig artifacts
 /zig-cache/
-/zig-out
+/zig-out/
