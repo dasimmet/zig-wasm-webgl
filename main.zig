@@ -8,7 +8,7 @@ var offsetUniformLocation: c_int = undefined;
 var positionBuffer: c_uint = undefined;
 
 export fn onInit() void {
-  gl.glClearColor(0.1, 0.1, 0.1, 1.0);
+  gl.glClearColor(0.1, 0.1, 0.5, 1.0);
   gl.glEnable(gl.GL_DEPTH_TEST);
   gl.glDepthFunc(gl.GL_LEQUAL);
   gl.glClear(gl.GL_COLOR_BUFFER_BIT | gl.GL_DEPTH_BUFFER_BIT);
@@ -36,6 +36,10 @@ export fn onAnimationFrame(timestamp: c_int) void {
   const delta = if(previous > 0) timestamp - previous else 0;
   x += @intToFloat(f32, delta) / 1000.0;
   if(x > 1) x = -2;
+  
+  const log = "WOLOLOasdasd";
+  
+  gl.consoleLogStr(log);
 
   gl.glClear(gl.GL_COLOR_BUFFER_BIT | gl.GL_DEPTH_BUFFER_BIT);
 

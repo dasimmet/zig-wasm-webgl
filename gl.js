@@ -42,7 +42,7 @@ function Canvas(element){
     this.glUniformLocations = [];
 
     this.consoleLog = (sourcePtr, sourceLen) => {
-        const source = readCharStr(sourcePtr, sourceLen);
+        const source = this.readCharStr(sourcePtr, sourceLen);
         console.log(source);
     }
 
