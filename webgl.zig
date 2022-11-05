@@ -3,20 +3,20 @@ pub extern fn compileShader(source: *const u8 , len:  c_uint, type: c_uint) c_ui
 pub extern fn linkShaderProgram(vertexShaderId: c_uint, fragmentShaderId: c_uint) c_uint;
 
 // GL
-pub extern fn glClearColor(_: f32, _: f32, _: f32, _: f32) void;
-pub extern fn glEnable(_: c_uint) void;
-pub extern fn glDepthFunc(_: c_uint) void;
-pub extern fn glClear(_: c_uint) void;
-pub extern fn glGetAttribLocation(_: c_uint, _: *const u8, _: c_uint) c_int ;
-pub extern fn glGetUniformLocation(_: c_uint, _: *const u8, _: c_uint) c_int;
+pub extern fn ClearColor(_: f32, _: f32, _: f32, _: f32) void;
+pub extern fn Enable(_: c_uint) void;
+pub extern fn DepthFunc(_: c_uint) void;
+pub extern fn Clear(_: c_uint) void;
+pub extern fn GetAttribLocation(_: c_uint, _: *const u8, _: c_uint) c_int ;
+pub extern fn GetUniformLocation(_: c_uint, _: *const u8, _: c_uint) c_int;
 pub extern fn Uniform4fv(_: c_int, _: f32, _: f32, _: f32, _: f32) void;
-pub extern fn glCreateBuffer() c_uint;
+pub extern fn CreateBuffer() c_uint;
 pub extern fn BufferDataBuffer(_: c_uint, _: c_uint) void;
 pub extern fn BufferData(_: c_uint, _: *const f32,  _:c_uint, _: c_uint) void;
 pub extern fn UseProgram(_: c_uint) void;
-pub extern fn glEnableVertexAttribArray(_: c_uint) void;
-pub extern fn glVertexAttribPointer(_: c_uint, _: c_uint, _: c_uint, _: c_uint, _: c_uint, _: c_uint) void;
-pub extern fn glDrawArrays(_: c_uint, _: c_uint, _: c_uint) void;
+pub extern fn EnableVertexAttribArray(_: c_uint) void;
+pub extern fn VertexAttribPointer(_: c_uint, _: c_uint, _: c_uint, _: c_uint, _: c_uint, _: c_uint) void;
+pub extern fn DrawArrays(_: c_uint, _: c_uint, _: c_uint) void;
 
 // Identifier constants pulled from WebGLRenderingContext
 pub const GL_VERTEX_SHADER: c_uint = 35633;

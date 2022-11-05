@@ -1,4 +1,4 @@
-function Canvas(element){
+function glCanvas(element){
 
     this.element = element;
     this.gl = element.getContext('webgl') || element.getContext('experimental-webgl');
@@ -18,13 +18,11 @@ function Canvas(element){
             const calcHeigth = Math.min(w / this.aspectRatio, h);
             const calcWOffset = (w - calcWidth) / 2
             const calcHOffset = (h - calcHeigth) / 2
-            // console.log([calcWOffset, calcHOffset, calcWidth, calcHeigth, w, h]);
             this.element.width = calcWidth;
             this.element.height = calcHeigth;
             this.gl.viewport(calcWOffset, calcHOffset, calcWidth, calcHeigth);
     
         } else {
-            // console.log([w,h]);
             this.element.width = w;
             this.element.height = h;
             this.gl.viewport(0, 0, w, h);
@@ -38,7 +36,7 @@ function Canvas(element){
     
     this.shaders = [];
     this.Programs = [];
-    this.glBuffers = [];
+    this.Buffers = [];
     this.UniformLocations = [];
 
     this.consoleLog = (sourcePtr, sourceLen) => {
@@ -47,23 +45,23 @@ function Canvas(element){
     }
 
     this.Uniform4fv = (locationId, x, y, z, w) => this.gl.uniform4fv(this.UniformLocations[locationId], [x, y, z, w]);
-    this.glCreateBuffer = () => {
-        this.glBuffers.push(this.gl.createBuffer());
-        return this.glBuffers.length - 1;
+    this.CreateBuffer = () => {
+        this.Buffers.push(this.gl.createBuffer());
+        return this.Buffers.length - 1;
     }
 
 
-    this.glGetAttribLocation = (programId, namePtr, nameLen) => this.gl.getAttribLocation(this.Programs[programId], this.readCharStr(namePtr, nameLen));
+    this.GetAttribLocation = (programId, namePtr, nameLen) => this.gl.getAttribLocation(this.Programs[programId], this.readCharStr(namePtr, nameLen));
 
     this.UseProgram = (programId) => this.gl.useProgram(this.Programs[programId]);
-    this.BufferDataBuffer = (type, bufferId) => this.gl.bindBuffer(type, this.glBuffers[bufferId]);
+    this.BufferDataBuffer = (type, bufferId) => this.gl.bindBuffer(type, this.Buffers[bufferId]);
     this.BufferData = (type, dataPtr, count, drawType) => {
         const floats = new Float32Array(this.memory.buffer, dataPtr, count);
         this.gl.bufferData(type, floats, drawType);
     }          
 
 
-    this.glGetUniformLocation = (programId, namePtr, nameLen) =>  {
+    this.GetUniformLocation = (programId, namePtr, nameLen) =>  {
         this.UniformLocations.push(this.gl.getUniformLocation(this.Programs[programId], this.readCharStr(namePtr, nameLen)));
         return this.UniformLocations.length - 1;
     }
@@ -97,24 +95,24 @@ function Canvas(element){
         return {        
             compileShader: this.compileShader,
             linkShaderProgram: this.linkShaderProgram,
-            glClearColor: (r,g,b,a) => this.gl.clearColor(r,g,b,a),
-            glEnable: (x) => this.gl.enable(x),
-            glDepthFunc: (x) => this.gl.depthFunc(x),
-            glClear: (x) => this.gl.clear(x),
-            glGetAttribLocation: this.glGetAttribLocation,
-            glGetUniformLocation: this.glGetUniformLocation,
+            ClearColor: (r,g,b,a) => this.gl.clearColor(r,g,b,a),
+            Enable: (x) => this.gl.enable(x),
+            DepthFunc: (x) => this.gl.depthFunc(x),
+            Clear: (x) => this.gl.clear(x),
+            GetAttribLocation: this.GetAttribLocation,
+            GetUniformLocation: this.GetUniformLocation,
             Uniform4fv: this.Uniform4fv,
-            glCreateBuffer: this.glCreateBuffer,
+            CreateBuffer: this.CreateBuffer,
             BufferDataBuffer: this.BufferDataBuffer,
             BufferData: this.BufferData,
             UseProgram: this.UseProgram,
-            glEnableVertexAttribArray: (x) => this.gl.enableVertexAttribArray(x),
-            glVertexAttribPointer: (attribLocation, size, type, normalize, stride, offset) => 
+            EnableVertexAttribArray: (x) => this.gl.enableVertexAttribArray(x),
+            VertexAttribPointer: (attribLocation, size, type, normalize, stride, offset) => 
                 this.gl.vertexAttribPointer(attribLocation, size, type, normalize, stride, offset),
-            glDrawArrays: (type, offset, count) => this.gl.drawArrays(type, offset, count),
+            DrawArrays: (type, offset, count) => this.gl.drawArrays(type, offset, count),
             consoleLog: this.consoleLog,
         }
     };
 }
 
-export default Canvas
+export default glCanvas

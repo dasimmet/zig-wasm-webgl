@@ -11,10 +11,10 @@ var offsetUniformLocation: c_int = undefined;
 var positionBuffer: c_uint = undefined;
 
 export fn onInit() void {
-  gl.glClearColor(0.1, 0.1, 0.5, 1.0);
-  gl.glEnable(gl.GL_DEPTH_TEST);
-  gl.glDepthFunc(gl.GL_LEQUAL);
-  gl.glClear(gl.GL_COLOR_BUFFER_BIT | gl.GL_DEPTH_BUFFER_BIT);
+  gl.ClearColor(0.1, 0.1, 0.5, 1.0);
+  gl.Enable(gl.GL_DEPTH_TEST);
+  gl.DepthFunc(gl.GL_LEQUAL);
+  gl.Clear(gl.GL_COLOR_BUFFER_BIT | gl.GL_DEPTH_BUFFER_BIT);
 
   const vertex_shader_id = gl.compileShader(&gl.vertexShader[0], gl.vertexShader.len, gl.GL_VERTEX_SHADER);
   const fsId = gl.compileShader(&gl.fragmentShader[0], gl.fragmentShader.len, gl.GL_FRAGMENT_SHADER);
@@ -24,10 +24,10 @@ export fn onInit() void {
   const a_position = "a_position";
   const u_offset = "u_offset";
 
-  positionAttributeLocation = gl.glGetAttribLocation(program_id, &a_position[0], a_position.len);
-  offsetUniformLocation = gl.glGetUniformLocation(program_id, &u_offset[0], u_offset.len);
+  positionAttributeLocation = gl.GetAttribLocation(program_id, &a_position[0], a_position.len);
+  offsetUniformLocation = gl.GetUniformLocation(program_id, &u_offset[0], u_offset.len);
 
-  positionBuffer = gl.glCreateBuffer();
+  positionBuffer = gl.CreateBuffer();
   gl.BufferDataBuffer(gl.GL_ARRAY_BUFFER, positionBuffer);
   gl.BufferData(gl.GL_ARRAY_BUFFER, &positions[0], 6, gl.GL_STATIC_DRAW);
 }
@@ -59,12 +59,12 @@ fn update(timestamp: c_int) void {
 
 fn draw() void {
 
-  gl.glClear(gl.GL_COLOR_BUFFER_BIT | gl.GL_DEPTH_BUFFER_BIT);
+  gl.Clear(gl.GL_COLOR_BUFFER_BIT | gl.GL_DEPTH_BUFFER_BIT);
 
   gl.UseProgram(program_id);
-  gl.glEnableVertexAttribArray(@intCast(c_uint, positionAttributeLocation));
+  gl.EnableVertexAttribArray(@intCast(c_uint, positionAttributeLocation));
   gl.BufferDataBuffer(gl.GL_ARRAY_BUFFER, positionBuffer);
-  gl.glVertexAttribPointer(@intCast(c_uint, positionAttributeLocation), 2, gl.GL_f32, 0, 0, 0);
+  gl.VertexAttribPointer(@intCast(c_uint, positionAttributeLocation), 2, gl.GL_f32, 0, 0, 0);
   gl.Uniform4fv(offsetUniformLocation, x, y, 0.0, 0.0);
-  gl.glDrawArrays(gl.GL_TRIANGLES, 0, 3);
+  gl.DrawArrays(gl.GL_TRIANGLES, 0, 3);
 }
