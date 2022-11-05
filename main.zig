@@ -1,4 +1,7 @@
 const gl = @import("webgl.zig");
+const std = @import("std");
+
+const allocator = std.heap.page_allocator;
 
 const positions = [_]f32 {0, 0, 0, 0.5, 0.7, 0};
 
@@ -31,13 +34,18 @@ export fn onInit() void {
 
 var previous: c_int = 0;
 var x: f32 = 0;
+var y: f32 = 0;
 
 export fn onAnimationFrame(timestamp: c_int) void {
   const delta = if(previous > 0) timestamp - previous else 0;
-  x += @intToFloat(f32, delta) / 1000.0;
-  if(x > 1) x = -2;
-  
-  const log = "WOLOLOasdasd";
+  const tsf = @intToFloat(f32, timestamp)/1000;
+
+  x = std.math.sin(std.math.pi * tsf);
+
+  y = std.math.cos(std.math.pi * tsf);
+
+  const log = std.fmt.allocPrint(allocator,"TSF: {d:.5} Delta: {} X: {d:.5} Y: {d:.5}", .{tsf,delta, x, y}) catch "";
+  defer allocator.free(log);
   
   gl.consoleLogStr(log);
 
@@ -47,7 +55,7 @@ export fn onAnimationFrame(timestamp: c_int) void {
   gl.glEnableVertexAttribArray(@intCast(c_uint, positionAttributeLocation));
   gl.glBindBuffer(gl.GL_ARRAY_BUFFER, positionBuffer);
   gl.glVertexAttribPointer(@intCast(c_uint, positionAttributeLocation), 2, gl.GL_f32, 0, 0, 0);
-  gl.glUniform4fv(offsetUniformLocation, x, 0.0, 0.0, 0.0);
+  gl.glUniform4fv(offsetUniformLocation, x, y, 0.0, 0.0);
   gl.glDrawArrays(gl.GL_TRIANGLES, 0, 3);
   previous = timestamp;
 }

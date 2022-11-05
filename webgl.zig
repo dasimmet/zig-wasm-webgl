@@ -31,10 +31,10 @@ pub const GL_COLOR_BUFFER_BIT: c_uint = 16384;
 pub const GL_DEPTH_BUFFER_BIT: c_uint = 256;
 
 // js helper
-pub extern fn consoleLog(sourcePtr: c_uint, sourceLen: c_uint) void;
+pub extern fn consoleLog(sourcePtr: *const u8, sourceLen: c_uint) void;
 
 pub fn consoleLogStr(string : []const u8) void {
-  return consoleLog(@ptrToInt(string.ptr), string.len);
+  return consoleLog(&string[0], string.len);
 }
 
 pub const vertexShader = 
@@ -48,6 +48,6 @@ pub const vertexShader =
 pub const fragmentShader =
   \\precision mediump float;
   \\void main() {
-  \\ gl_FragColor = vec4(0.3, 0.3, 1.0, 1.0);
+  \\ gl_FragColor = vec4(1.3, 0.3, 0.3, 1.0);
   \\}
 ;
