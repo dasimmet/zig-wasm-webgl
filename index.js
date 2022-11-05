@@ -1,8 +1,9 @@
 import Canvas from "./gl.js"
 
 const canvas = document.getElementById("canvas");
-const glCanvas = new Canvas(canvas);
-glCanvas.gl.viewport(0, 0, canvas.width, canvas.height);
+
+var glCanvas = new Canvas(canvas);
+glCanvas.aspectRatio = 4/3;
 
 function fetchAndInstantiate(url, importObject) {
   return fetch(url).then(response =>
@@ -24,6 +25,7 @@ fetchAndInstantiate('zig-out/lib/main.wasm', {env:glCanvas.env()}).then(function
   const logArray = new Int32Array(glCanvas.memory.buffer, 0, 100);
 
   function step(timestamp) {
+    glCanvas.step(timestamp);
     glCanvas.onAnimationFrame(timestamp);
     window.requestAnimationFrame(step);
   }

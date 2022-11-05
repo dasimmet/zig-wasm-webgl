@@ -1,13 +1,40 @@
 function Canvas(element){
 
-    let memory;
+    this.element = element;
+    this.gl = element.getContext('webgl') || element.getContext('experimental-webgl');
+
+    this.memory = null;
+    this.aspectRatio = null;
+    this.width = null;
+    this.height = null;
+
+    this.step = (timestamp) => {
+        const rect = this.gl.canvas.getBoundingClientRect();
+        const w = this.width  != null ? this.width  : rect.width;
+        const h = this.height != null ? this.height : rect.height;
+    
+        if (this.aspectRatio != null){
+            const calcWidth = Math.min(h * this.aspectRatio, w);
+            const calcHeigth = Math.min(w / this.aspectRatio, h);
+            const calcWOffset = (w - calcWidth) / 2
+            const calcHOffset = (h - calcHeigth) / 2
+            // console.log([calcWOffset, calcHOffset, calcWidth, calcHeigth, w, h]);
+            this.element.width = calcWidth;
+            this.element.height = calcHeigth;
+            this.gl.viewport(calcWOffset, calcHOffset, calcWidth, calcHeigth);
+    
+        } else {
+            // console.log([w,h]);
+            this.element.width = w;
+            this.element.height = h;
+            this.gl.viewport(0, 0, w, h);
+        }
+    }
 
     this.readCharStr = (ptr, len) => {
         const bytes = new Uint8Array(this.memory.buffer, ptr, len);
         return new TextDecoder("utf-8").decode(bytes);
     }
-
-    this.gl = element.getContext('webgl') || element.getContext('experimental-webgl');
     
     this.shaders = [];
     this.glPrograms = [];
