@@ -37,35 +37,35 @@ function Canvas(element){
     }
     
     this.shaders = [];
-    this.glPrograms = [];
+    this.Programs = [];
     this.glBuffers = [];
-    this.glUniformLocations = [];
+    this.UniformLocations = [];
 
     this.consoleLog = (sourcePtr, sourceLen) => {
         const source = this.readCharStr(sourcePtr, sourceLen);
         console.log(source);
     }
 
-    this.glUniform4fv = (locationId, x, y, z, w) => this.gl.uniform4fv(this.glUniformLocations[locationId], [x, y, z, w]);
+    this.Uniform4fv = (locationId, x, y, z, w) => this.gl.uniform4fv(this.UniformLocations[locationId], [x, y, z, w]);
     this.glCreateBuffer = () => {
         this.glBuffers.push(this.gl.createBuffer());
         return this.glBuffers.length - 1;
     }
 
 
-    this.glGetAttribLocation = (programId, namePtr, nameLen) => this.gl.getAttribLocation(this.glPrograms[programId], this.readCharStr(namePtr, nameLen));
+    this.glGetAttribLocation = (programId, namePtr, nameLen) => this.gl.getAttribLocation(this.Programs[programId], this.readCharStr(namePtr, nameLen));
 
-    this.glUseProgram = (programId) => this.gl.useProgram(this.glPrograms[programId]);
-    this.glBindBuffer = (type, bufferId) => this.gl.bindBuffer(type, this.glBuffers[bufferId]);
-    this.glBufferData = (type, dataPtr, count, drawType) => {
+    this.UseProgram = (programId) => this.gl.useProgram(this.Programs[programId]);
+    this.BufferDataBuffer = (type, bufferId) => this.gl.bindBuffer(type, this.glBuffers[bufferId]);
+    this.BufferData = (type, dataPtr, count, drawType) => {
         const floats = new Float32Array(this.memory.buffer, dataPtr, count);
         this.gl.bufferData(type, floats, drawType);
     }          
 
 
     this.glGetUniformLocation = (programId, namePtr, nameLen) =>  {
-        this.glUniformLocations.push(this.gl.getUniformLocation(this.glPrograms[programId], this.readCharStr(namePtr, nameLen)));
-        return this.glUniformLocations.length - 1;
+        this.UniformLocations.push(this.gl.getUniformLocation(this.Programs[programId], this.readCharStr(namePtr, nameLen)));
+        return this.UniformLocations.length - 1;
     }
 
     this.linkShaderProgram = (vertexShaderId, fragmentShaderId) => {
@@ -76,8 +76,8 @@ function Canvas(element){
         if (!this.gl.getProgramParameter(program, this.gl.LINK_STATUS)) {
             throw ("Error linking program:" + gl.getProgramInfoLog (program));
         }
-        this.glPrograms.push(program);
-        return this.glPrograms.length - 1;
+        this.Programs.push(program);
+        return this.Programs.length - 1;
     }
 
     
@@ -103,11 +103,11 @@ function Canvas(element){
             glClear: (x) => this.gl.clear(x),
             glGetAttribLocation: this.glGetAttribLocation,
             glGetUniformLocation: this.glGetUniformLocation,
-            glUniform4fv: this.glUniform4fv,
+            Uniform4fv: this.Uniform4fv,
             glCreateBuffer: this.glCreateBuffer,
-            glBindBuffer: this.glBindBuffer,
-            glBufferData: this.glBufferData,
-            glUseProgram: this.glUseProgram,
+            BufferDataBuffer: this.BufferDataBuffer,
+            BufferData: this.BufferData,
+            UseProgram: this.UseProgram,
             glEnableVertexAttribArray: (x) => this.gl.enableVertexAttribArray(x),
             glVertexAttribPointer: (attribLocation, size, type, normalize, stride, offset) => 
                 this.gl.vertexAttribPointer(attribLocation, size, type, normalize, stride, offset),

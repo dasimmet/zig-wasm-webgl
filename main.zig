@@ -3,7 +3,7 @@ const std = @import("std");
 
 const allocator = std.heap.page_allocator;
 
-const positions = [_]f32 {0, 0, 0, 0.5, 0.7, 0};
+const positions = [_]f32 {-1, 0, 0, 0.5, 0.7, 0};
 
 var program_id: c_uint = undefined;
 var positionAttributeLocation: c_int = undefined;
@@ -28,8 +28,8 @@ export fn onInit() void {
   offsetUniformLocation = gl.glGetUniformLocation(program_id, &u_offset[0], u_offset.len);
 
   positionBuffer = gl.glCreateBuffer();
-  gl.glBindBuffer(gl.GL_ARRAY_BUFFER, positionBuffer);
-  gl.glBufferData(gl.GL_ARRAY_BUFFER, &positions[0], 6, gl.GL_STATIC_DRAW);
+  gl.BufferDataBuffer(gl.GL_ARRAY_BUFFER, positionBuffer);
+  gl.BufferData(gl.GL_ARRAY_BUFFER, &positions[0], 6, gl.GL_STATIC_DRAW);
 }
 
 var previous: c_int = 0;
@@ -37,25 +37,34 @@ var x: f32 = 0;
 var y: f32 = 0;
 
 export fn onAnimationFrame(timestamp: c_int) void {
+  update(timestamp);
+
+  draw();
+}
+
+fn update(timestamp: c_int) void {
   const delta = if(previous > 0) timestamp - previous else 0;
   const tsf = @intToFloat(f32, timestamp)/1000;
 
-  x = std.math.sin(std.math.pi * tsf);
+  x = std.math.sin(std.math.pi * 0.3 * tsf);
 
-  y = std.math.cos(std.math.pi * tsf);
+  y = std.math.cos(std.math.pi * 0.3 * tsf);
 
   const log = std.fmt.allocPrint(allocator,"TSF: {d:.5} Delta: {} X: {d:.5} Y: {d:.5}", .{tsf,delta, x, y}) catch "";
   defer allocator.free(log);
   
   gl.consoleLogStr(log);
+  previous = timestamp;
+}
+
+fn draw() void {
 
   gl.glClear(gl.GL_COLOR_BUFFER_BIT | gl.GL_DEPTH_BUFFER_BIT);
 
-  gl.glUseProgram(program_id);
+  gl.UseProgram(program_id);
   gl.glEnableVertexAttribArray(@intCast(c_uint, positionAttributeLocation));
-  gl.glBindBuffer(gl.GL_ARRAY_BUFFER, positionBuffer);
+  gl.BufferDataBuffer(gl.GL_ARRAY_BUFFER, positionBuffer);
   gl.glVertexAttribPointer(@intCast(c_uint, positionAttributeLocation), 2, gl.GL_f32, 0, 0, 0);
-  gl.glUniform4fv(offsetUniformLocation, x, y, 0.0, 0.0);
+  gl.Uniform4fv(offsetUniformLocation, x, y, 0.0, 0.0);
   gl.glDrawArrays(gl.GL_TRIANGLES, 0, 3);
-  previous = timestamp;
 }
